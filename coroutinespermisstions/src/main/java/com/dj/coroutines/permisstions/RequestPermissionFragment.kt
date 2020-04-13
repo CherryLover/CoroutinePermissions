@@ -1,10 +1,12 @@
 package com.dj.coroutines.permisstions
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 
 class RequestPermissionFragment : Fragment{
-    private lateinit var permissions:Array<String>
+    private val permissions = mutableListOf<String>()
     private var listener:RequestPermissionsListener? = null
     companion object{
         private const val INTENT_TO_START = "INTENT_TO_START"
@@ -23,15 +25,34 @@ class RequestPermissionFragment : Fragment{
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var tmpList = mutableListOf<String>()
         arguments?.let {
-            permissions= it.getStringArray(INTENT_TO_START) as Array<String>
+            val receiveList = it.getStringArray(INTENT_TO_START) as Array<String>
+            tmpList = receiveList.toMutableList()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            tmpList.forEach {
+                if (requireActivity().checkSelfPermission(it) == PackageManager.PERMISSION_DENIED) {
+                    permissions.add(it)
+                }
+            }
         }
     }
 
+    private val showRationalePermissionList = mutableListOf<String>()
+
     override fun onResume() {
         super.onResume()
-        if (permissions!=null){
-            requestPermissions(permissions, REQUEST_CODE)
+        if (permissions.isNotEmpty()) {
+            permissions.forEach {
+                if (!shouldShowRequestPermissionRationale(it)) {
+                    showRationalePermissionList.add(it)
+                }
+            }
+            if (showRationalePermissionList.isNotEmpty()) {
+                listener?.onShowRequestPermissionRationale(showRationalePermissionList)
+            }
+            requestPermissions(permissions.toTypedArray(), REQUEST_CODE)
         }else{
             removeFragment()
         }
@@ -57,5 +78,7 @@ class RequestPermissionFragment : Fragment{
     }
     interface RequestPermissionsListener{
         fun onRequestPermissions(requestCode: Int, permissions: Array<out String>, grantResults: IntArray)
+
+        fun onShowRequestPermissionRationale(showRationalePermissionList: MutableList<String>)
     }
 }

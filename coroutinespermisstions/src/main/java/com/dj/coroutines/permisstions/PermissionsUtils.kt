@@ -3,12 +3,14 @@ package com.dj.coroutines.permisstions
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.dj.coroutines.permisstions.callbacks.FailCallback
+import com.dj.coroutines.permisstions.callbacks.ShowRationaleCallback
 import com.dj.coroutines.permisstions.callbacks.SuccessCallback
 import kotlin.coroutines.suspendCoroutine
 
 suspend fun FragmentActivity.requestPermissionsForResult(
     granted: (allGranted: Boolean, grantedList: MutableList<String>) -> Unit,
     denied: (allGranted: Boolean, grantedList: MutableList<String>) -> Unit,
+    showRationale: (permissionList: MutableList<String>) -> Unit,
     vararg permissions: String
 ): Boolean =
     suspendCoroutine {
@@ -27,6 +29,11 @@ suspend fun FragmentActivity.requestPermissionsForResult(
                     deniedPermissionList: MutableList<String>
                 ) {
                     denied(allPermissionDenied, deniedPermissionList)
+                }
+            })
+            .onShowRationale(object : ShowRationaleCallback {
+                override fun showRationale(permissionList: MutableList<String>) {
+                    showRationale(permissionList)
                 }
             })
             .requestPermissions(*permissions)
@@ -35,6 +42,7 @@ suspend fun FragmentActivity.requestPermissionsForResult(
 suspend fun Fragment.requestPermissionsForResult(
     granted: (allGranted: Boolean, grantedList: MutableList<String>) -> Unit,
     denied: (allGranted: Boolean, grantedList: MutableList<String>) -> Unit,
+    showRationale: (permissionList: MutableList<String>) -> Unit,
     vararg permissions: String
 ): Boolean =
     suspendCoroutine {
@@ -53,6 +61,11 @@ suspend fun Fragment.requestPermissionsForResult(
                     deniedPermissionList: MutableList<String>
                 ) {
                     denied(allPermissionDenied, deniedPermissionList)
+                }
+            })
+            .onShowRationale(object : ShowRationaleCallback {
+                override fun showRationale(permissionList: MutableList<String>) {
+                    showRationale(permissionList)
                 }
             })
             .requestPermissions(*permissions)

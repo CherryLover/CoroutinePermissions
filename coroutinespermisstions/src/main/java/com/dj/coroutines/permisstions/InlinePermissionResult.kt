@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.dj.coroutines.permisstions.callbacks.FailCallback
+import com.dj.coroutines.permisstions.callbacks.ShowRationaleCallback
 import com.dj.coroutines.permisstions.callbacks.SuccessCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +18,8 @@ class InlinePermissionResult {
     private var activityReference: Reference<FragmentActivity>
     private val successCallbacks=ArrayList<SuccessCallback>()
     private val failCallbacks=ArrayList<FailCallback>()
+    private val showRationaleCallbacks = mutableListOf<ShowRationaleCallback>()
+
     private var listener=object : RequestPermissionFragment.RequestPermissionsListener{
         val resultGrantedPermissionList = mutableListOf<String>()
         val resultDeniedPermissionList = mutableListOf<String>()
@@ -41,6 +44,12 @@ class InlinePermissionResult {
                 )
             }
         }
+
+        override fun onShowRequestPermissionRationale(showRationalePermissionList: MutableList<String>) {
+            showRationaleCallbacks.forEach {
+                it.showRationale(showRationalePermissionList)
+            }
+        }
     }
     constructor(activity: FragmentActivity){
         activityReference= WeakReference(activity)
@@ -56,6 +65,11 @@ class InlinePermissionResult {
     }
     fun onFail(callback: FailCallback):InlinePermissionResult{
         failCallbacks.add(callback)
+        return this
+    }
+
+    fun onShowRationale(showRationaleCallback: ShowRationaleCallback): InlinePermissionResult {
+        showRationaleCallbacks.add(showRationaleCallback)
         return this
     }
 
