@@ -1,5 +1,5 @@
 package com.dj.coroutines.permisstions.callbacks
 
 interface SuccessCallback {
-    fun onSuccess()
+    fun onSuccess(allPermissionGranted: Boolean, grantedPermissionList: MutableList<String>)
 }
