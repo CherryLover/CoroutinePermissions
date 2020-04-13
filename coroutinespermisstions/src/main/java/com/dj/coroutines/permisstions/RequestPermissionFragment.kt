@@ -44,14 +44,6 @@ class RequestPermissionFragment : Fragment{
     override fun onResume() {
         super.onResume()
         if (permissions.isNotEmpty()) {
-            permissions.forEach {
-                if (!shouldShowRequestPermissionRationale(it)) {
-                    showRationalePermissionList.add(it)
-                }
-            }
-            if (showRationalePermissionList.isNotEmpty()) {
-                listener?.onShowRequestPermissionRationale(showRationalePermissionList)
-            }
             requestPermissions(permissions.toTypedArray(), REQUEST_CODE)
         }else{
             removeFragment()
@@ -65,6 +57,14 @@ class RequestPermissionFragment : Fragment{
         if (requestCode== REQUEST_CODE){
             listener?.let {
                 it.onRequestPermissions(requestCode,permissions, grantResults)
+            }
+            this.permissions.forEach {
+                if (!shouldShowRequestPermissionRationale(it)) {
+                    showRationalePermissionList.add(it)
+                }
+            }
+            if (showRationalePermissionList.isNotEmpty()) {
+                listener?.onShowRequestPermissionRationale(showRationalePermissionList)
             }
             removeFragment()
         }
