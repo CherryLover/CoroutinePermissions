@@ -42,6 +42,11 @@ class PermissionActivity : AppCompatActivity() {
                     fun(allDenied: Boolean, deniedList: MutableList<String>) {
                         Log.d(tag, "allDenied: $allDenied deniedList: $deniedList")
                     },
+                    fun(permissionList: MutableList<String>) {
+                        permissionList.forEach {
+                            Log.e(tag, "I need $it for xxxxxx")
+                        }
+                    },
                     *permissions
                 )
             }

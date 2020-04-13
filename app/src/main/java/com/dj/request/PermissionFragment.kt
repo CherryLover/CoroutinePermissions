@@ -37,6 +37,11 @@ class PermissionFragment:Fragment(){
                 fun(allDenied: Boolean, deniedList: MutableList<String>) {
                     Log.d(logt, "allDenied: $allDenied deniedList: $deniedList")
                 },
+                fun(permissionList: MutableList<String>) {
+                    permissionList.forEach {
+                        Log.e(logt, "I need $it for xxxxxx")
+                    }
+                },
                 *permissions
             )
         }
