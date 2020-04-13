@@ -31,18 +31,10 @@ class PermissionFragment:Fragment(){
     private fun initView(){
         CoroutineScope(Dispatchers.Main).launch {
             requestPermissionsForResult(
+                permissions,
                 fun(allGranted: Boolean, grantedList: MutableList<String>) {
                     Log.d(logt, "allGranted: $allGranted grantedList: $grantedList")
-                },
-                fun(allDenied: Boolean, deniedList: MutableList<String>) {
-                    Log.d(logt, "allDenied: $allDenied deniedList: $deniedList")
-                },
-                fun(permissionList: MutableList<String>) {
-                    permissionList.forEach {
-                        Log.e(logt, "I need $it for xxxxxx")
-                    }
-                },
-                *permissions
+                }
             )
         }
     }

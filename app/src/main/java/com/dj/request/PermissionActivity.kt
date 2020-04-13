@@ -36,6 +36,7 @@ class PermissionActivity : AppCompatActivity() {
         btnActRequire.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 requestPermissionsForResult(
+                    permissions,
                     fun(allGranted: Boolean, grantedList: MutableList<String>) {
                         Log.d(tag, "allGranted: $allGranted grantedList: $grantedList")
                     },
@@ -46,8 +47,7 @@ class PermissionActivity : AppCompatActivity() {
                         permissionList.forEach {
                             Log.e(tag, "I need $it for xxxxxx")
                         }
-                    },
-                    *permissions
+                    }
                 )
             }
         }
