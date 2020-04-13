@@ -55,7 +55,10 @@ class InlinePermissionResult {
         activityReference= WeakReference(activity)
     }
     constructor(fragment: Fragment){
-        val activity: FragmentActivity = fragment.requireActivity()
+        var activity: FragmentActivity? = null
+        fragment?.let {
+            activity = fragment.activity
+        }
         activityReference= WeakReference(activity)
     }
 
