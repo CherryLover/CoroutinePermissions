@@ -8,10 +8,10 @@ import com.dj.coroutines.permisstions.callbacks.SuccessCallback
 import kotlin.coroutines.suspendCoroutine
 
 suspend fun FragmentActivity.requestPermissionsForResult(
+    permissions: Array<String>,
     granted: (allGranted: Boolean, grantedList: MutableList<String>) -> Unit,
-    denied: (allGranted: Boolean, grantedList: MutableList<String>) -> Unit,
-    showRationale: (permissionList: MutableList<String>) -> Unit,
-    vararg permissions: String
+    denied: ((allGranted: Boolean, grantedList: MutableList<String>) -> Unit?)? = null,
+    showRationale: ((permissionList: MutableList<String>) -> Unit?)? = null
 ): Boolean =
     suspendCoroutine {
         InlinePermissionResult(this)
@@ -28,22 +28,22 @@ suspend fun FragmentActivity.requestPermissionsForResult(
                     allPermissionDenied: Boolean,
                     deniedPermissionList: MutableList<String>
                 ) {
-                    denied(allPermissionDenied, deniedPermissionList)
+                    denied?.invoke(allPermissionDenied, deniedPermissionList)
                 }
             })
             .onShowRationale(object : ShowRationaleCallback {
                 override fun showRationale(permissionList: MutableList<String>) {
-                    showRationale(permissionList)
+                    showRationale?.invoke(permissionList)
                 }
             })
-            .requestPermissions(*permissions)
+            .requestPermissions(permissions)
     }
 
 suspend fun Fragment.requestPermissionsForResult(
+    permissions: Array<String>,
     granted: (allGranted: Boolean, grantedList: MutableList<String>) -> Unit,
-    denied: (allGranted: Boolean, grantedList: MutableList<String>) -> Unit,
-    showRationale: (permissionList: MutableList<String>) -> Unit,
-    vararg permissions: String
+    denied: ((allGranted: Boolean, grantedList: MutableList<String>) -> Unit?)? = null,
+    showRationale: ((permissionList: MutableList<String>) -> Unit?)? = null
 ): Boolean =
     suspendCoroutine {
         InlinePermissionResult(this)
@@ -60,13 +60,13 @@ suspend fun Fragment.requestPermissionsForResult(
                     allPermissionDenied: Boolean,
                     deniedPermissionList: MutableList<String>
                 ) {
-                    denied(allPermissionDenied, deniedPermissionList)
+                    denied?.invoke(allPermissionDenied, deniedPermissionList)
                 }
             })
             .onShowRationale(object : ShowRationaleCallback {
                 override fun showRationale(permissionList: MutableList<String>) {
-                    showRationale(permissionList)
+                    showRationale?.invoke(permissionList)
                 }
             })
-            .requestPermissions(*permissions)
+            .requestPermissions(permissions)
     }

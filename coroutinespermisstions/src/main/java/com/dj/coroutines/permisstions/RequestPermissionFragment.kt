@@ -11,7 +11,7 @@ class RequestPermissionFragment : Fragment{
     companion object{
         private const val INTENT_TO_START = "INTENT_TO_START"
         private const val REQUEST_CODE = 24
-        fun newInstance(vararg permissions:String):RequestPermissionFragment{
+        fun newInstance(permissions: Array<String>): RequestPermissionFragment {
             val bundle= Bundle()
             bundle.putStringArray(INTENT_TO_START,permissions)
             val fragment=RequestPermissionFragment()

@@ -73,7 +73,7 @@ class InlinePermissionResult {
         return this
     }
 
-    fun requestPermissions(vararg permissions:String){
+    fun requestPermissions(permissions: Array<String>) {
         val activity=activityReference.get()
         if (activity==null || activity.isFinishing)return
 
@@ -81,7 +81,7 @@ class InlinePermissionResult {
         if (oldFragment!=null){
             oldFragment.setListener(listener)
         }else{
-            val newFragment=RequestPermissionFragment.newInstance(*permissions)
+            val newFragment = RequestPermissionFragment.newInstance(permissions)
             newFragment.setListener(listener)
             CoroutineScope(Dispatchers.Main).launch {
                 activity.supportFragmentManager
